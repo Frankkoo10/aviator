@@ -32,14 +32,11 @@ async function verificarSesionYJugar() {
         const { data: { session } } = await supabaseClient.auth.getSession();
         
         if (!session) {
-            // MODO PRUEBA LOCAL: Si abres el archivo suelto y no hay sesión, 
-            // no te bloquea. Te da un usuario falso y saldo para que puedas probarlo.
             console.warn("No hay sesión activa de Supabase. Iniciando en MODO PRUEBA...");
             document.getElementById("message").innerText = "Modo de prueba local activado";
             currentUser = { id: 'usuario_prueba_local' };
             saldo = 5000;
         } else {
-            // MODO PRODUCCIÓN: Si hay sesión, busca tu saldo real en la base de datos
             currentUser = session.user;
             const { data: perfilData, error } = await supabaseClient
                 .from('perfiles')
@@ -55,7 +52,6 @@ async function verificarSesionYJugar() {
             }
         }
 
-        // Una vez que tenemos el saldo (real o de prueba), arrancamos el juego
         actualizarUI();
         ajustarCanvas();
         iniciarCuentaRegresiva();
@@ -80,7 +76,6 @@ function actualizarUI() {
     document.getElementById("balance-amount").innerText = saldo.toFixed(2);
 }
 
-// Iniciar sesión apenas carga la ventana
 window.onload = verificarSesionYJugar;
 window.onresize = ajustarCanvas;
 
@@ -160,7 +155,7 @@ function iniciarCuentaRegresiva() {
     limpiarCanvas(); 
 
     if (saldo <= 0) {
-        saldo = 2000; // Bono de emergencia si se queda en 0
+        saldo = 2000; 
         guardarSaldoEnBD();
         actualizarUI();
     }
@@ -195,9 +190,9 @@ function comenzarVuelo() {
     if (apuestaRegistrada > 0) {
         enRondaActual = true;
         apuestaActual = apuestaRegistrada;
-        saldo -= apuestaActual; // Descontamos el saldo al iniciar
+        saldo -= apuestaActual; 
         
-        guardarSaldoEnBD(); // Guardamos el descuento en Supabase
+        guardarSaldoEnBD(); 
         actualizarUI();
         
         document.getElementById("message").innerText = "¡El avión ha despegado! Cuidado...";
@@ -210,7 +205,6 @@ function comenzarVuelo() {
         document.getElementById("message").innerText = "Vuelo en progreso... (Modo Espectador)";
     }
 
-    // Cálculo del punto de choque
     const azar = Math.random();
     if (azar < 0.12) {
         puntoDeChoque = 1.00;
@@ -335,7 +329,7 @@ function retirarse() {
     let fichasGanadas = Math.floor(apuestaActual * multiplicadorActual);
     saldo += fichasGanadas;
 
-    guardarSaldoEnBD(); // Guardar ganancias en Supabase
+    guardarSaldoEnBD(); 
     actualizarUI();
 
     document.getElementById("multiplier-display").style.color = "#28a745";
