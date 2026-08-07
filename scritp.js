@@ -25,39 +25,49 @@ let intervaloContador = null;
 let historialCaidas = [];
 
 // ==========================================
-// 3. LÓGICA DE AUTENTICACIÓN
+// 3. LÓGICA DE AUTENTICACIÓN Y SALDOS
 // ==========================================
 async function verificarSesionYJugar() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    
-    if (!session) {
-        // Redirigir al lobby principal si no está logueado
-        window.location.href = 'index.html'; 
-        return;
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        if (!session) {
+            // MODO PRUEBA LOCAL: Si abres el archivo suelto y no hay sesión, 
+            // no te bloquea. Te da un usuario falso y saldo para que puedas probarlo.
+            console.warn("No hay sesión activa de Supabase. Iniciando en MODO PRUEBA...");
+            document.getElementById("message").innerText = "Modo de prueba local activado";
+            currentUser = { id: 'usuario_prueba_local' };
+            saldo = 5000;
+        } else {
+            // MODO PRODUCCIÓN: Si hay sesión, busca tu saldo real en la base de datos
+            currentUser = session.user;
+            const { data: perfilData, error } = await supabaseClient
+                .from('perfiles')
+                .select('saldo')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (perfilData) {
+                saldo = parseFloat(perfilData.saldo);
+            } else {
+                saldo = 10000; // Bono inicial si la cuenta es nueva
+                await guardarSaldoEnBD(); 
+            }
+        }
+
+        // Una vez que tenemos el saldo (real o de prueba), arrancamos el juego
+        actualizarUI();
+        ajustarCanvas();
+        iniciarCuentaRegresiva();
+
+    } catch (error) {
+        console.error("Error fatal al conectar con Supabase:", error);
+        document.getElementById("message").innerText = "Error de conexión con la Base de Datos.";
     }
-    
-    currentUser = session.user;
-
-    const { data: perfilData } = await supabaseClient
-        .from('perfiles')
-        .select('saldo')
-        .eq('id', currentUser.id)
-        .single();
-
-    if (perfilData) {
-        saldo = parseFloat(perfilData.saldo);
-    } else {
-        saldo = 10000; // Bono inicial si no existe
-        await guardarSaldoEnBD(); 
-    }
-
-    actualizarUI();
-    ajustarCanvas();
-    iniciarCuentaRegresiva();
 }
 
 async function guardarSaldoEnBD() {
-    if(!currentUser) return;
+    if(!currentUser || currentUser.id === 'usuario_prueba_local') return;
     await supabaseClient
         .from('perfiles')
         .upsert({ 
@@ -70,6 +80,7 @@ function actualizarUI() {
     document.getElementById("balance-amount").innerText = saldo.toFixed(2);
 }
 
+// Iniciar sesión apenas carga la ventana
 window.onload = verificarSesionYJugar;
 window.onresize = ajustarCanvas;
 
