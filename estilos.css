@@ -1,0 +1,283 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a24;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.game-container {
+    position: relative;
+    background-color: #252532;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.balance-container {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+h1 {
+    margin-top: 10px;
+    font-size: 24px;
+    color: #e0e0e0;
+}
+
+/* Zona de vuelo dinámica */
+.flight-zone {
+    position: relative;
+    height: 250px;
+    background-color: #0f0f15;
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+    border: 2px solid #3d3d5c;
+}
+
+/* El multiplicador */
+.multiplier {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #ffffff;
+    transition: color 0.1s ease;
+    z-index: 2;
+}
+
+/* Avión */
+.airplane {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    transition: all 0.1s linear;
+}
+
+.airplane-img {
+    width: 65px;
+    height: auto;
+    display: block;
+}
+
+/* Controles Base */
+.controls-panel {
+    background-color: #1f1f2e;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#betting-section {
+    width: 100%;
+}
+
+/* ==========================================
+   ESTILOS DE FICHAS DE CASINO (NUEVO)
+   ========================================== */
+.chips-selector {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    transition: opacity 0.3s;
+}
+
+.chips-selector.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.chip {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px dashed rgba(255, 255, 255, 0.75);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.chip-inner {
+    width: 37px;
+    height: 37px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.chip-100 { background: radial-gradient(circle, #2980b9, #1f3a52); }
+.chip-250 { background: radial-gradient(circle, #27ae60, #145a32); }
+.chip-500 { background: radial-gradient(circle, #e74c3c, #7b241c); }
+.chip-1000 { background: radial-gradient(circle, #f39c12, #9a6306); }
+.chip-5000 { background: radial-gradient(circle, #8e44ad, #512e5f); }
+
+.chip:hover {
+    transform: scale(1.10);
+    box-shadow: 0 0 0 2px #000, 0 0 15px #f39c12, 0 10px 20px rgba(0,0,0,0.7);
+    border-color: #fff;
+    z-index: 5;
+}
+
+.chip:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================
+   BOTONES DE APUESTA
+   ========================================== */
+.bet-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: #2b2b3d;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.current-bet-display {
+    font-size: 16px;
+    font-weight: bold;
+    color: #f39c12;
+    flex: 1;
+    text-align: left;
+}
+
+#btn-clear {
+    background-color: #c0392b;
+    color: white;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#btn-clear:hover { background-color: #e74c3c; }
+
+#btn-despegar {
+    background-color: #e91e63;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#btn-retirarse {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    display: none;
+}
+
+button:disabled {
+    background-color: #4f4f64 !important;
+    cursor: not-allowed !important;
+    color: #a0a0a0 !important;
+    transform: none !important;
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #b0b0cb;
+    min-height: 24px;
+}
+
+/* Historial */
+.history-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 5px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #12121a;
+    min-height: 25px;
+    scrollbar-width: none; 
+}
+
+.history-bar::-webkit-scrollbar {
+    display: none; 
+}
+
+.history-item {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.history-low { background-color: rgba(143, 143, 159, 0.2); color: #98a2b3; }
+.history-medium { background-color: rgba(145, 71, 255, 0.2); color: #bfa3ff; }
+.history-high { background-color: rgba(233, 30, 99, 0.2); color: #ff6097; }
+
+/* Para celulares */
+@media (max-width: 600px) {
+    .bet-actions {
+        flex-direction: column;
+    }
+    
+    .current-bet-display {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    #btn-clear, #btn-despegar {
+        width: 100%;
+    }
+    
+    .chip {
+        width: 45px;
+        height: 45px;
+    }
+
+    .chip-inner {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+    }
+}

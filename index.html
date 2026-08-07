@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Vuelo (Crash Game) - Conectado</title>
+    <link rel="stylesheet" href="estilos.css">
+    
+    <!-- Script de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="game-container">
+        <br><br>
+        <div id="history-bar" class="history-bar"></div>
+
+        <div class="balance-container">
+            Créditos: $<span id="balance-amount">CARGANDO...</span>
+        </div>
+        
+        <h1>Simulador Aviador</h1>
+
+       <div class="flight-zone" id="flight-zone">
+            <canvas id="trail-canvas"></canvas>
+
+            <div id="multiplier-display" class="multiplier">1.00x</div>
+            <div id="airplane" class="airplane">
+                <img id="airplane-img" src="fotoavion.png" alt="Avión" class="airplane-img">
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div id="betting-section">
+                <!-- Selector de Fichas -->
+                <div class="chips-selector" id="chips-container">
+                    <div class="chip chip-100" onclick="sumarApuesta(100)">
+                        <div class="chip-inner">100</div>
+                    </div>
+                    <div class="chip chip-250" onclick="sumarApuesta(250)">
+                        <div class="chip-inner">250</div>
+                    </div>
+                    <div class="chip chip-500" onclick="sumarApuesta(500)">
+                        <div class="chip-inner">500</div>
+                    </div>
+                    <div class="chip chip-1000" onclick="sumarApuesta(1000)">
+                        <div class="chip-inner">1K</div>
+                    </div>
+                    <div class="chip chip-5000" onclick="sumarApuesta(5000)">
+                        <div class="chip-inner">5K</div>
+                    </div>
+                </div>
+
+                <div class="bet-actions">
+                    <div class="current-bet-display">Apuesta: $<span id="bet-amount">0</span></div>
+                    <button id="btn-clear" onclick="limpiarApuesta()">Limpiar</button>
+                    <button id="btn-despegar" onclick="registrarApuestaJugador()">Apostar</button>
+                </div>
+            </div>
+
+            <button id="btn-retirarse" onclick="retirarse()" disabled>¡COBRAR!</button>
+        </div>
+
+        <div id="message" class="message">Verificando sesión...</div>
+    </div>
+
+    <!-- Asegúrate de que el nombre coincida exactamente con tu archivo JS -->
+    <script src="script.js"></script> 
+</body>
+</html>
